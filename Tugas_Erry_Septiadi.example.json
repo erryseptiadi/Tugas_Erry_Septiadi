@@ -1,0 +1,406 @@
+﻿{
+    "name":  "Tugas_Erry_Septiadi",
+    "nodes":  [
+                  {
+                      "parameters":  {
+                                         "rule":  {
+                                                      "interval":  [
+                                                                       {
+                                                                           "triggerAtHour":  8,
+                                                                           "triggerAtMinute":  1
+                                                                       }
+                                                                   ]
+                                                  }
+                                     },
+                      "id":  "9ef6f433-e745-46f6-9f13-c98c092643d5",
+                      "name":  "Schedule Trigger",
+                      "type":  "n8n-nodes-base.scheduleTrigger",
+                      "typeVersion":  1.4,
+                      "position":  [
+                                       0,
+                                       0
+                                   ]
+                  },
+                  {
+                      "parameters":  {
+                                         "url":  "https://api.bmkg.go.id/publik/prakiraan-cuaca?adm4=31.73.07.1003",
+                                         "options":  {
+
+                                                     }
+                                     },
+                      "id":  "20b51a84-981a-49a7-9af4-d8440f17f02c",
+                      "name":  "HTTP Request",
+                      "type":  "n8n-nodes-base.httpRequest",
+                      "typeVersion":  4.5,
+                      "position":  [
+                                       224,
+                                       0
+                                   ]
+                  },
+                  {
+                      "parameters":  {
+                                         "assignments":  {
+                                                             "assignments":  [
+                                                                                 {
+                                                                                     "id":  "d2bed20c-8232-46b6-9c5a-6598d4c782e5",
+                                                                                     "name":  "tanggal",
+                                                                                     "value":  "={{ $json.data[0].cuaca[0][0].utc_datetime }}",
+                                                                                     "type":  "string"
+                                                                                 },
+                                                                                 {
+                                                                                     "id":  "48b17410-0726-4d80-b31c-a935b95e188c",
+                                                                                     "name":  "kelurahan",
+                                                                                     "value":  "={{ $json.data[0].lokasi.desa }}",
+                                                                                     "type":  "string"
+                                                                                 },
+                                                                                 {
+                                                                                     "id":  "94374bcb-f06c-4b0c-8775-954b3eb9a7d9",
+                                                                                     "name":  "suhu",
+                                                                                     "value":  "={{ $json.data[0].cuaca[0][0].t }}",
+                                                                                     "type":  "string"
+                                                                                 },
+                                                                                 {
+                                                                                     "id":  "4e62b2f6-16aa-4b1b-92c5-8f12ba2f8584",
+                                                                                     "name":  "kelembapan",
+                                                                                     "value":  "={{ $json.data[0].cuaca[0][0].hu }}",
+                                                                                     "type":  "string"
+                                                                                 },
+                                                                                 {
+                                                                                     "id":  "2ffa17dd-0451-45f7-b891-6274dc6ab910",
+                                                                                     "name":  "kondisi_cuaca",
+                                                                                     "value":  "={{ $json.data[0].cuaca[0][0].weather_desc }}",
+                                                                                     "type":  "string"
+                                                                                 }
+                                                                             ]
+                                                         },
+                                         "options":  {
+
+                                                     }
+                                     },
+                      "id":  "13d20c31-8bab-4686-8512-a6c11f7e22bf",
+                      "name":  "Edit Fields",
+                      "type":  "n8n-nodes-base.set",
+                      "typeVersion":  3.5,
+                      "position":  [
+                                       448,
+                                       0
+                                   ]
+                  },
+                  {
+                      "parameters":  {
+                                         "operation":  "append",
+                                         "documentId":  {
+                                                            "__rl":  true,
+                                                            "value":  "REPLACE_WITH_SPREADSHEET_ID",
+                                                            "mode":  "list",
+                                                            "cachedResultName":  "data_cuaca_harian",
+                                                            "cachedResultUrl":  "https://docs.google.com/spreadsheets/d/REPLACE_WITH_SPREADSHEET_ID/edit"
+                                                        },
+                                         "sheetName":  {
+                                                           "__rl":  true,
+                                                           "value":  "REPLACE_WITH_SHEET_ID",
+                                                           "mode":  "list",
+                                                           "cachedResultName":  "update_cuaca",
+                                                           "cachedResultUrl":  "https://docs.google.com/spreadsheets/d/REPLACE_WITH_SPREADSHEET_ID/edit#gid=REPLACE_WITH_SHEET_ID"
+                                                       },
+                                         "columns":  {
+                                                         "mappingMode":  "defineBelow",
+                                                         "value":  {
+                                                                       "tanggal":  "={{ $json.tanggal }}",
+                                                                       "kelurahan":  "={{ $json.kelurahan }}",
+                                                                       "suhu":  "={{ $json.suhu }}",
+                                                                       "kelembapan":  "={{ $json.kelembapan }}",
+                                                                       "kondisi_cuaca":  "={{ $json.kondisi_cuaca }}"
+                                                                   },
+                                                         "matchingColumns":  [
+
+                                                                             ],
+                                                         "schema":  [
+                                                                        {
+                                                                            "id":  "tanggal",
+                                                                            "displayName":  "tanggal",
+                                                                            "required":  false,
+                                                                            "defaultMatch":  false,
+                                                                            "display":  true,
+                                                                            "type":  "string",
+                                                                            "canBeUsedToMatch":  true,
+                                                                            "removed":  false
+                                                                        },
+                                                                        {
+                                                                            "id":  "kelurahan",
+                                                                            "displayName":  "kelurahan",
+                                                                            "required":  false,
+                                                                            "defaultMatch":  false,
+                                                                            "display":  true,
+                                                                            "type":  "string",
+                                                                            "canBeUsedToMatch":  true,
+                                                                            "removed":  false
+                                                                        },
+                                                                        {
+                                                                            "id":  "suhu",
+                                                                            "displayName":  "suhu",
+                                                                            "required":  false,
+                                                                            "defaultMatch":  false,
+                                                                            "display":  true,
+                                                                            "type":  "string",
+                                                                            "canBeUsedToMatch":  true,
+                                                                            "removed":  false
+                                                                        },
+                                                                        {
+                                                                            "id":  "kelembapan",
+                                                                            "displayName":  "kelembapan",
+                                                                            "required":  false,
+                                                                            "defaultMatch":  false,
+                                                                            "display":  true,
+                                                                            "type":  "string",
+                                                                            "canBeUsedToMatch":  true,
+                                                                            "removed":  false
+                                                                        },
+                                                                        {
+                                                                            "id":  "kondisi_cuaca",
+                                                                            "displayName":  "kondisi_cuaca",
+                                                                            "required":  false,
+                                                                            "defaultMatch":  false,
+                                                                            "display":  true,
+                                                                            "type":  "string",
+                                                                            "canBeUsedToMatch":  true,
+                                                                            "removed":  false
+                                                                        }
+                                                                    ],
+                                                         "attemptToConvertTypes":  false,
+                                                         "convertFieldsToString":  false
+                                                     },
+                                         "options":  {
+
+                                                     }
+                                     },
+                      "id":  "390d477d-7c82-44b6-9d09-e97667ec280a",
+                      "name":  "Append row in sheet",
+                      "type":  "n8n-nodes-base.googleSheets",
+                      "typeVersion":  4.7,
+                      "position":  [
+                                       672,
+                                       0
+                                   ],
+                      "retryOnFail":  true,
+                      "waitBetweenTries":  3000,
+                      "credentials":  {
+                                          "googleSheetsOAuth2Api":  {
+                                                                        "id":  "REPLACE_WITH_N8N_CREDENTIAL_ID",
+                                                                        "name":  "Google Sheets account"
+                                                                    }
+                                      }
+                  },
+                  {
+                      "parameters":  {
+                                         "documentId":  {
+                                                            "__rl":  true,
+                                                            "value":  "REPLACE_WITH_SPREADSHEET_ID",
+                                                            "mode":  "list",
+                                                            "cachedResultName":  "data_cuaca_harian",
+                                                            "cachedResultUrl":  "https://docs.google.com/spreadsheets/d/REPLACE_WITH_SPREADSHEET_ID/edit"
+                                                        },
+                                         "sheetName":  {
+                                                           "__rl":  true,
+                                                           "value":  "REPLACE_WITH_SHEET_ID",
+                                                           "mode":  "list",
+                                                           "cachedResultName":  "update_cuaca",
+                                                           "cachedResultUrl":  "https://docs.google.com/spreadsheets/d/REPLACE_WITH_SPREADSHEET_ID/edit#gid=REPLACE_WITH_SHEET_ID"
+                                                       },
+                                         "filtersUI":  {
+                                                           "values":  [
+                                                                          {
+                                                                              "lookupColumn":  "tanggal",
+                                                                              "lookupValue":  "={{ DateTime.fromFormat($json.tanggal, \u0027yyyy-MM-dd HH:mm:ss\u0027).minus({ days: 1 }).toFormat(\u0027yyyy-MM-dd HH:mm:ss\u0027) }}"
+                                                                          }
+                                                                      ]
+                                                       },
+                                         "options":  {
+
+                                                     }
+                                     },
+                      "id":  "af9e13f6-fb7b-4348-af39-690b34723a02",
+                      "name":  "Get row(s) in sheet",
+                      "type":  "n8n-nodes-base.googleSheets",
+                      "typeVersion":  4.7,
+                      "position":  [
+                                       848,
+                                       0
+                                   ],
+                      "retryOnFail":  true,
+                      "waitBetweenTries":  3000,
+                      "alwaysOutputData":  true,
+                      "credentials":  {
+                                          "googleSheetsOAuth2Api":  {
+                                                                        "id":  "REPLACE_WITH_N8N_CREDENTIAL_ID",
+                                                                        "name":  "Google Sheets account"
+                                                                    }
+                                      }
+                  },
+                  {
+                      "parameters":  {
+                                         "promptType":  "define",
+                                         "text":  "=Data Cuaca BMKG Hari Ini:\n- Tanggal: {{ $(\u0027Edit Fields\u0027).item.json.tanggal }}\n- Lokasi: {{ $(\u0027Edit Fields\u0027).item.json.kelurahan }}\n- Kondisi Cuaca: {{ $(\u0027Edit Fields\u0027).item.json.kondisi_cuaca }}\n- Suhu Maksimum: {{ $(\u0027Edit Fields\u0027).item.json.suhu }}Â°C\n- Kelembapan: {{ $(\u0027Edit Fields\u0027).item.json.kelembapan }}%\n\n\nTolong berikan rekomendasi perawatan kebun hidroponik/urban farming dengan format:\n0. Perbandingan singkat cuaca hari ini vs kemarin (jika data kemarin kosong/tidak tersedia, lewati poin ini dan sebutkan data kemarin belum ada)\n1. Analisis Singkat Kondisi Iklim Kebun\n2. Instruksi Tindakan Pagi \u0026 Siang Hari (misal: penanganan suhu, paranet, air nutrisi PPM/ph)\n3. Instruksi Tindakan Sore \u0026 Malam Hari (misal: potensi hujan/jamur, penanganan penguapan)\n4. Berikan insight dan Analisis dengan data cuaca pada tanggal sebelumnya\n5. Hindari penggunaan ** ## dan lainnya, karena tujuannya untuk kirim ke email",
+                                         "options":  {
+                                                         "systemMessage":  "Kamu adalah asisten ahli pertanian hidroponik/urban farming. Berikan rekomendasi perawatan kebun yang praktis dan akurat berdasarkan data cuaca BMKG yang diberikan, dalam Bahasa Indonesia serta analisis berdasarkan data cuaca BMKG pada hari sebelumnya"
+                                                     }
+                                     },
+                      "id":  "992b4645-8a40-49f0-b9d1-18686d23128e",
+                      "name":  "AI Agent",
+                      "type":  "@n8n/n8n-nodes-langchain.agent",
+                      "typeVersion":  3.1,
+                      "position":  [
+                                       1008,
+                                       0
+                                   ],
+                      "retryOnFail":  true
+                  },
+                  {
+                      "parameters":  {
+                                         "modelName":  "models/gemini-3.1-flash-lite",
+                                         "options":  {
+
+                                                     }
+                                     },
+                      "id":  "9658295b-0486-4129-a254-efba7d0630b5",
+                      "name":  "Google Gemini Chat Model1",
+                      "type":  "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+                      "typeVersion":  1.2,
+                      "position":  [
+                                       1008,
+                                       160
+                                   ],
+                      "credentials":  {
+                                          "googlePalmApi":  {
+                                                                "id":  "REPLACE_WITH_N8N_CREDENTIAL_ID",
+                                                                "name":  "Google Gemini(PaLM) Api account"
+                                                            }
+                                      }
+                  },
+                  {
+                      "parameters":  {
+                                         "chatId":  "REPLACE_WITH_TELEGRAM_CHAT_ID",
+                                         "text":  "=ðŸ‘‹ Selamat pagi! Asisten Kebun AI hadir lagi nih! ðŸ¤–ðŸŒ± \n\nSebelum mulai aktivitas, yuk intip bocoran cuaca dari BMKG buat area {{ $(\u0027Append row in sheet\u0027).item.json.kelurahan }} hari ini ({{ $(\u0027Append row in sheet\u0027).item.json.tanggal }}):\nðŸŒ¡ï¸ Suhu Udara: {{ $(\u0027Append row in sheet\u0027).item.json.suhu }}Â°C\nðŸ’§ Kelembapan: {{ $(\u0027Append row in sheet\u0027).item.json.kelembapan }}%\nðŸŒ¤ï¸ Cuaca: {{ $(\u0027Append row in sheet\u0027).item.json.kondisi_cuaca }}  \n\n--- ðŸ“Œ APA YANG HARUS DILAKUKAN HARI INI?\n{{ $json.output }}  \n--- Happy Gardening \u0026 Have a Great Day! ðŸŒ»ðŸ’š",
+                                         "additionalFields":  {
+
+                                                              }
+                                     },
+                      "id":  "62dd42df-ce8f-4f90-b8ce-6089af029705",
+                      "name":  "Send a text message",
+                      "type":  "n8n-nodes-base.telegram",
+                      "typeVersion":  1.2,
+                      "position":  [
+                                       1296,
+                                       0
+                                   ],
+                      "retryOnFail":  true,
+                      "waitBetweenTries":  3,
+                      "webhookId":  "REPLACE_WITH_N8N_WEBHOOK_ID",
+                      "credentials":  {
+                                          "telegramApi":  {
+                                                              "id":  "REPLACE_WITH_N8N_CREDENTIAL_ID",
+                                                              "name":  "Telegram account"
+                                                          }
+                                      }
+                  }
+              ],
+    "pinData":  {
+
+                },
+    "connections":  {
+                        "Schedule Trigger":  {
+                                                 "main":  [
+                                                              [
+                                                                  {
+                                                                      "node":  "HTTP Request",
+                                                                      "type":  "main",
+                                                                      "index":  0
+                                                                  }
+                                                              ]
+                                                          ]
+                                             },
+                        "HTTP Request":  {
+                                             "main":  [
+                                                          [
+                                                              {
+                                                                  "node":  "Edit Fields",
+                                                                  "type":  "main",
+                                                                  "index":  0
+                                                              }
+                                                          ]
+                                                      ]
+                                         },
+                        "Edit Fields":  {
+                                            "main":  [
+                                                         [
+                                                             {
+                                                                 "node":  "Append row in sheet",
+                                                                 "type":  "main",
+                                                                 "index":  0
+                                                             }
+                                                         ]
+                                                     ]
+                                        },
+                        "Append row in sheet":  {
+                                                    "main":  [
+                                                                 [
+                                                                     {
+                                                                         "node":  "Get row(s) in sheet",
+                                                                         "type":  "main",
+                                                                         "index":  0
+                                                                     }
+                                                                 ]
+                                                             ]
+                                                },
+                        "Get row(s) in sheet":  {
+                                                    "main":  [
+                                                                 [
+                                                                     {
+                                                                         "node":  "AI Agent",
+                                                                         "type":  "main",
+                                                                         "index":  0
+                                                                     }
+                                                                 ]
+                                                             ]
+                                                },
+                        "AI Agent":  {
+                                         "main":  [
+                                                      [
+                                                          {
+                                                              "node":  "Send a text message",
+                                                              "type":  "main",
+                                                              "index":  0
+                                                          }
+                                                      ]
+                                                  ]
+                                     },
+                        "Google Gemini Chat Model1":  {
+                                                          "ai_languageModel":  [
+                                                                                   [
+                                                                                       {
+                                                                                           "node":  "AI Agent",
+                                                                                           "type":  "ai_languageModel",
+                                                                                           "index":  0
+                                                                                       }
+                                                                                   ]
+                                                                               ]
+                                                      }
+                    },
+    "active":  false,
+    "settings":  {
+                     "executionOrder":  "v1",
+                     "binaryMode":  "separate"
+                 },
+    "versionId":  "94c3e80d-8186-4cc5-8c69-b404c38dc4da",
+    "meta":  {
+                 "templateCredsSetupCompleted":  true,
+                 "instanceId":  "ac6d4853facc14f0376061ffed9a930bbd7b1d21f54f3fd14894818651d3bb18"
+             },
+    "nodeGroups":  [
+
+                   ],
+    "id":  "M0bht858c6Q5qR18",
+    "tags":  [
+
+             ]
+}
